@@ -29,26 +29,56 @@ const StudentSchema = new mongoose.Schema({
         required: [true, 'Please provide a valid phone number'],
         maxlength: 20
     },
-    major: {
-        type: String,
-        minlength: 3
-    },
-    university: {
-        type: String,
-        minlength: 5
-    },
-    medium: {
-        type: String,
-        minlength: 5
-    },
-    subjects: [{
-        type: String,
-        //required: [true, 'Please list the subjects you are willing to teach']
-    }],
-    locations: [{
-        type: String,
-        //required: [true, 'Please list the locations where you are willing to teach']
-    }]
+    // major: {
+    //     type: String,
+    //     minlength: 3
+    // },
+    posts: [
+        {
+            preferred_institution: {
+                type: String,
+                minlength: 5
+            },
+            medium: {
+                type: String,
+                minlength: 5
+            },
+            class: {
+                type: String
+            },
+            presence: {
+                type: String,
+            },
+            subjects: [{
+                type: String,
+                //required: [true, 'Please list the subjects you are willing to teach']
+            }],
+            location: {
+                type: String,
+                //required: [true, 'Please list the locations where you are willing to teach']
+            },
+            tutorlist: {
+                applied: [],
+                liked: [],
+                rejected: []
+            },
+            max_salary: {
+                type: String
+            }, 
+            min_salary: {
+                type: String
+            },
+            tutor_gender: {
+                type: String,
+            },
+            student_gender: {
+                type: String
+            },
+            availability_days: {
+                type: String
+            }
+        }
+    ]
 })
 
 module.exports = mongoose.model("StudentDetails", StudentSchema)
