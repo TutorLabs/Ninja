@@ -1,5 +1,6 @@
 const StudentDetails = require('../models/student')
 const TutorDetails = require('../models/tutor')
+const admin = require("firebase-admin")
 
 const userInfo = async(req, res) => {
     let {first_name, last_name, number, role} = await req.body
@@ -8,6 +9,9 @@ const userInfo = async(req, res) => {
     } else if (role == 'tutor') {
         await TutorDetails.create({firstname: first_name, lastname: last_name, phone: number})
     }
+    res.json({
+        success: 'Success'
+    })
 }
 
 const postingInfo = async(req, res) => {
@@ -30,6 +34,44 @@ const postingInfo = async(req, res) => {
             }
         },
     })
+    res.json({
+        success: 'Success'
+    })
 }
 
-module.exports = {userInfo, postingInfo}
+const getPostInfo = async(req, res) => {
+    const data = await StudentDetails.find({})
+    //console.log(data)
+    res.json({
+        data
+    })
+}
+
+const tutorlist = async(req, res) => {
+    const data = await TutorDetails.find({})
+    res.json({
+        data
+    })
+}
+
+const applied = async(req, res) => {
+    const token = req.body.token
+    const phone = await verify(token)
+    const user = await TutorDetails.find({phone: phone})
+    const id = user[0]._id
+    
+}
+
+async function verify(token) {
+    let phone = ''
+    await admin.auth().verifyIdToken(token)
+    .then((decodedToken) => {
+        const uid = decodedToken.uid
+        phone = decodedToken.phone_number
+    }).catch((error) => {
+        console.log(error)
+    })
+    return phone
+}
+
+module.exports = {userInfo, postingInfo, getPostInfo, tutorlist, applied}

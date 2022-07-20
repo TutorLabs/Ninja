@@ -1,6 +1,7 @@
 // Student/Parent Details
 const mongoose = require('mongoose')
 const validator = require('validator')
+const Schema = mongoose.Schema
 
 const StudentSchema = new mongoose.Schema({
     firstname: {
@@ -17,17 +18,18 @@ const StudentSchema = new mongoose.Schema({
     email: {
         type: String,
         //required: [true, 'Please provide your email'],
-        match: [
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        'Please provide a valid email',
-        ],
-        unique: true,
+        // match: [
+        // /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        // 'Please provide a valid email',
+        // ],
+        //unique: true,
         //validate: [validator.isEmail, 'Please provide a valid email']
     },
     phone: {
         type: String,
         required: [true, 'Please provide a valid phone number'],
-        maxlength: 20
+        maxlength: 20,
+        unique: true
     },
     // major: {
     //     type: String,
@@ -57,10 +59,19 @@ const StudentSchema = new mongoose.Schema({
                 type: String,
                 //required: [true, 'Please list the locations where you are willing to teach']
             },
-            tutorlist: {
-                applied: [],
-                liked: [],
-                rejected: []
+            applicants: {
+                applied: [{
+                    type: Schema.Types.ObjectId,
+                    ref: 'TutorDetails'
+                }],
+                liked: [{
+                    type: Schema.Types.ObjectId,
+                    ref: 'TutorDetails'
+                }],
+                rejected: [{
+                    type: Schema.Types.ObjectId,
+                    ref: 'TutorDetails'
+                }]
             },
             max_salary: {
                 type: String
