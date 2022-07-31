@@ -52,8 +52,7 @@ const postingInfo = async (req, res) => {
 };
 
 const getPostInfo = async (req, res) => {
-  const data = await StudentDetails.find({});
-  //console.log(data)
+  const data = await StudentDetails.find({}, { posts: 1, _id: 0 });
   res.json({
     data,
   });
