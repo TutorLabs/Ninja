@@ -42,6 +42,9 @@ const postingInfo = async (req, res) => {
           student_gender: body.student_gender,
           availability_days: body.days,
           preferred_institution: body.school,
+          date: new Date().toISOString().slice(0, 10),
+          firstname: body.first_name,
+          lastname: body.last_name,
         },
       },
     }
