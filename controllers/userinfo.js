@@ -78,9 +78,13 @@ const getUserPosts = async (req, res) => {
   const token = authorization.split(" ")[1];
   const phone = await verify(token);
   const user = await StudentDetails.find({ phone: phone });
-  res.json({
-    user
-  });
+  if (Object.keys(user).length > 0) {
+    const data = user[0].posts;
+    console.log(user[0].posts);
+    res.json({
+      data,
+    });
+  }
 };
 
 async function verify(token) {
