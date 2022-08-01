@@ -1,6 +1,8 @@
 const StudentDetails = require("../models/student");
 const TutorDetails = require("../models/tutor");
 const admin = require("firebase-admin");
+const { ObjectId } = require("mongodb");
+const mongoose = require("mongoose");
 
 const userInfo = async (req, res) => {
   let { first_name, last_name, number, role } = await req.body;
@@ -89,6 +91,15 @@ const getUserPosts = async (req, res) => {
   }
 };
 
+const deleteUserPost = async (req, res) => {
+  const data = await StudentDetails.updateOne({'posts._id': ObjectId(req.params.id)}, {
+    $pull: {posts: {_id: ObjectId(req.params.id)}}
+  })
+  res.json({
+    success: "success",
+  });
+};
+
 async function verify(token) {
   let phone = "";
   await admin
@@ -111,4 +122,5 @@ module.exports = {
   tutorlist,
   applied,
   getUserPosts,
+  deleteUserPost,
 };
