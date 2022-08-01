@@ -1,6 +1,8 @@
 const StudentDetails = require("../models/student");
 const TutorDetails = require("../models/tutor");
 const admin = require("firebase-admin");
+const { ObjectId } = require("mongodb");
+const mongoose = require("mongoose");
 
 const userInfo = async (req, res) => {
   let { first_name, last_name, number, role } = await req.body;
@@ -42,6 +44,9 @@ const postingInfo = async (req, res) => {
           student_gender: body.student_gender,
           availability_days: body.days,
           preferred_institution: body.school,
+          date: new Date().toISOString().slice(0, 10),
+          firstname: body.first_name,
+          lastname: body.last_name,
         },
       },
     }
@@ -83,8 +88,21 @@ const getUserPosts = async (req, res) => {
   const token = authorization.split(" ")[1];
   const phone = await verify(token);
   const user = await StudentDetails.find({ phone: phone });
+  if (Object.keys(user).length > 0) {
+    const data = user[0].posts;
+    console.log(user[0].posts);
+    res.json({
+      data,
+    });
+  }
+};
+
+const deleteUserPost = async (req, res) => {
+  const data = await StudentDetails.updateOne({'posts._id': ObjectId(req.params.id)}, {
+    $pull: {posts: {_id: ObjectId(req.params.id)}}
+  })
   res.json({
-    user,
+    success: "success",
   });
 };
 
@@ -110,4 +128,5 @@ module.exports = {
   tutorlist,
   applied,
   getUserPosts,
+  deleteUserPost,
 };

@@ -41,6 +41,15 @@ const StudentSchema = new mongoose.Schema({
                 type: String,
                 minlength: 5
             },
+            firstname: {
+                type: String,
+            },
+            lastname: {
+                type: String,
+            },
+            date: {
+                type: String,
+            },
             medium: {
                 type: String,
                 minlength: 5
