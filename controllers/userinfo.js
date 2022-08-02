@@ -34,19 +34,19 @@ const postingInfo = async (req, res) => {
         posts: {
           email: body.email,
           medium: body.medium,
-          subjects: body.subject,
+          subjects: body.subjects,
           location: body.location,
           class: body.class,
-          presence: body.online,
+          online: body.online,
           max_salary: body.max_salary,
           min_salary: body.min_salary,
           tutor_gender: body.preferred_gender,
           student_gender: body.student_gender,
           availability_days: body.days,
-          preferred_institution: body.school,
+          school: body.school,
           date: new Date().toISOString().slice(0, 10),
-          firstname: body.first_name,
-          lastname: body.last_name,
+          firstname: body.firstname,
+          lastname: body.lastname,
         },
       },
     }
@@ -63,7 +63,7 @@ const getPostInfo = async (req, res) => {
     item.posts.map((post) => {
       postings.push(post);
     });
-  })
+  });
   res.json({
     postings,
   });
@@ -90,7 +90,6 @@ const getUserPosts = async (req, res) => {
   const user = await StudentDetails.find({ phone: phone });
   if (Object.keys(user).length > 0) {
     const data = user[0].posts;
-    console.log(user[0].posts);
     res.json({
       data,
     });
@@ -98,12 +97,56 @@ const getUserPosts = async (req, res) => {
 };
 
 const deleteUserPost = async (req, res) => {
-  const data = await StudentDetails.updateOne({'posts._id': ObjectId(req.params.id)}, {
-    $pull: {posts: {_id: ObjectId(req.params.id)}}
-  })
+  const data = await StudentDetails.updateOne(
+    { "posts._id": ObjectId(req.params.id) },
+    {
+      $pull: { posts: { _id: ObjectId(req.params.id) } },
+    }
+  );
   res.json({
     success: "success",
   });
+};
+
+const getSinglePost = async (req, res) => {
+  const data = await StudentDetails.aggregate([
+    { $unwind: "$posts" },
+    { $match: { "posts._id": ObjectId(req.params.id) } },
+  ]);
+  const post = data[0].posts;
+  res.json({
+    post,
+  });
+};
+
+const updatePost = async (req, res) => {
+  console.log(req.params.id);
+  console.log(req.body);
+  const body = req.body;
+  const data = await StudentDetails.updateOne(
+    { "posts._id": ObjectId(req.params.id) },
+    {
+      $set: {
+        posts: {
+          email: body.email,
+          medium: body.medium,
+          subjects: body.subject,
+          location: body.location,
+          class: body.class,
+          presence: body.online,
+          max_salary: body.max_salary,
+          min_salary: body.min_salary,
+          tutor_gender: body.preferred_gender,
+          student_gender: body.student_gender,
+          availability_days: body.days,
+          institution: body.school,
+          date: new Date().toISOString().slice(0, 10),
+          firstname: body.first_name,
+          lastname: body.last_name,
+        },
+      },
+    }
+  );
 };
 
 async function verify(token) {
@@ -129,4 +172,6 @@ module.exports = {
   applied,
   getUserPosts,
   deleteUserPost,
+  getSinglePost,
+  updatePost,
 };

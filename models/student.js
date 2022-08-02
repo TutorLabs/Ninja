@@ -37,7 +37,7 @@ const StudentSchema = new mongoose.Schema({
   // },
   posts: [
     {
-      institution: {
+      school: {
         type: String,
         minlength: 5,
       },
@@ -57,7 +57,7 @@ const StudentSchema = new mongoose.Schema({
       class: {
         type: String,
       },
-      presence: {
+      online: {
         type: String,
       },
       subjects: [
