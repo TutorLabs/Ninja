@@ -77,10 +77,23 @@ const tutorlist = async (req, res) => {
 };
 
 const applied = async (req, res) => {
-  const token = req.body.token;
+  const body = req.body;
+  const authorization = req.headers.authorization;
+  const token = authorization.split(" ")[1];
   const phone = await verify(token);
   const user = await TutorDetails.find({ phone: phone });
-  const id = user[0]._id;
+  console.log(user);
+  const id = body.id;
+  console.log(id);
+  const data = await StudentDetails.findOneAndUpdate(
+    { "posts._id": ObjectId(id) },
+    {
+      $push: {
+        "posts.$.applied": ObjectId(user[0]._id),
+      },
+    }
+  );
+  console.log(data);
 };
 
 const getUserPosts = async (req, res) => {
@@ -120,30 +133,25 @@ const getSinglePost = async (req, res) => {
 };
 
 const updatePost = async (req, res) => {
-  console.log(req.params.id);
-  console.log(req.body);
   const body = req.body;
-  const data = await StudentDetails.updateOne(
+  await StudentDetails.findOneAndUpdate(
     { "posts._id": ObjectId(req.params.id) },
     {
       $set: {
-        posts: {
-          email: body.email,
-          medium: body.medium,
-          subjects: body.subject,
-          location: body.location,
-          class: body.class,
-          presence: body.online,
-          max_salary: body.max_salary,
-          min_salary: body.min_salary,
-          tutor_gender: body.preferred_gender,
-          student_gender: body.student_gender,
-          availability_days: body.days,
-          institution: body.school,
-          date: new Date().toISOString().slice(0, 10),
-          firstname: body.first_name,
-          lastname: body.last_name,
-        },
+        "posts.$.firstname": body.firstname,
+        "posts.$.lastname": body.lastname,
+        "posts.$.email": body.email,
+        "posts.$.medium": body.medium,
+        "posts.$.subjects": body.subjects,
+        "posts.$.online": body.online,
+        "posts.$.location": body.location,
+        "posts.$.class": body.class,
+        "posts.$.max_salary": body.max_salary,
+        "posts.$.min_salary": body.min_salary,
+        "posts.$.tutor_gender": body.preferred_gender,
+        "posts.$.student_gender": body.student_gender,
+        "posts.$.availability_days": body.days,
+        "posts.$.school": body.school,
       },
     }
   );

@@ -70,26 +70,24 @@ const StudentSchema = new mongoose.Schema({
         type: String,
         //required: [true, 'Please list the locations where you are willing to teach']
       },
-      applicants: {
-        applied: [
-          {
+      applied: [
+        {
             type: Schema.Types.ObjectId,
             ref: "TutorDetails",
-          },
-        ],
-        liked: [
-          {
-            type: Schema.Types.ObjectId,
-            ref: "TutorDetails",
-          },
-        ],
-        rejected: [
-          {
-            type: Schema.Types.ObjectId,
-            ref: "TutorDetails",
-          },
-        ],
-      },
+        }
+      ],
+      liked: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "TutorDetails",
+        },
+      ],
+      rejected: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: "TutorDetails",
+        },
+      ],
       max_salary: {
         type: String,
       },
