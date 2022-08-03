@@ -11,7 +11,8 @@ const {
   deleteUserPost,
   getSinglePost,
   updatePost,
-  getPostApplicants
+  getPostApplicants,
+  getPhoneNumber
 } = require("../controllers/userinfo");
 
 router.post("/register", createUser);
@@ -21,5 +22,6 @@ router.post("/apply", applied);
 router.get("/myposts", getUserPosts);
 router.route("/post/:id").delete(deleteUserPost).get(getSinglePost).put(updatePost)
 router.get("/applicants/:id", getPostApplicants)
+router.get("/phone", getPhoneNumber)
 
 module.exports = router;

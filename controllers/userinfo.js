@@ -177,6 +177,15 @@ const updatePost = async (req, res) => {
   );
 };
 
+const getPhoneNumber = async(req, res) => {
+  const authorization = req.headers.authorization;
+  const token = authorization.split(" ")[1];
+  const phone = await verify(token);
+  res.json({
+    phone: phone
+  })
+}
+ 
 async function verify(token) {
   let phone = "";
   await admin
@@ -202,5 +211,6 @@ module.exports = {
   deleteUserPost,
   getSinglePost,
   updatePost,
-  getPostApplicants
+  getPostApplicants,
+  getPhoneNumber
 };
