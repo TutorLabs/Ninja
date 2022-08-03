@@ -2,9 +2,10 @@ const StudentDetails = require("../models/student");
 const TutorDetails = require("../models/tutor");
 const admin = require("firebase-admin");
 const { ObjectId } = require("mongodb");
-const mongoose = require("mongoose");
+const tutor = require("../models/tutor");
 
-const userInfo = async (req, res) => {
+// Creates the user with the initial info
+const createUser = async (req, res) => {
   let { first_name, last_name, number, role } = await req.body;
   if (role == "student") {
     await StudentDetails.create({
@@ -24,7 +25,8 @@ const userInfo = async (req, res) => {
   });
 };
 
-const postingInfo = async (req, res) => {
+// Creates a new post for the user
+const createStudentPost = async (req, res) => {
   const body = req.body;
   const number = body.phone_number;
   await StudentDetails.updateOne(
@@ -132,6 +134,24 @@ const getSinglePost = async (req, res) => {
   });
 };
 
+const getPostApplicants = async(req, res) => {
+  console.log(req.params.id)
+  const data = await StudentDetails.aggregate([
+    { $unwind: "$posts" },
+    { $match: { "posts._id": ObjectId(req.params.id) } },
+  ]);
+  const post = data[0].posts.applied;
+  let applicants = []
+  await Promise.all(post.map(async(item) => {
+    await TutorDetails.findOne({"_id": ObjectId(item)}).then(tutor => {
+      applicants.push(tutor)
+    })
+  }))
+  res.json({
+    applicants
+  })
+}
+
 const updatePost = async (req, res) => {
   const body = req.body;
   await StudentDetails.findOneAndUpdate(
@@ -173,8 +193,8 @@ async function verify(token) {
 }
 
 module.exports = {
-  userInfo,
-  postingInfo,
+  createUser,
+  createStudentPost,
   getPostInfo,
   tutorlist,
   applied,
@@ -182,4 +202,5 @@ module.exports = {
   deleteUserPost,
   getSinglePost,
   updatePost,
+  getPostApplicants
 };
