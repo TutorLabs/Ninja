@@ -40,8 +40,8 @@ app.use("/testapi", testApiRouter);
 app.get('/', (req, res) => {
     res.send('Hello World')
 })
-app.use('', verify)
-app.use('', details)
+app.use('/api', verify)
+app.use('/api', details)
 
 const port = process.env.PORT || 9000
 
