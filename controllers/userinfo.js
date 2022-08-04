@@ -58,6 +58,39 @@ const createStudentPost = async (req, res) => {
   });
 };
 
+const createTutorProfile = async (req, res) => {
+  const body = req.body;
+  const number = body.phone_number;
+  await TutorDetails.updateOne(
+    { phone: number },
+    {
+      email: body.email,
+      medium: body.medium,
+      subjects: body.subjects,
+      locations: body.locations,
+      class: body.class,
+      online: body.online,
+      max_salary: body.max_salary,
+      min_salary: body.min_salary,
+      tutor_gender: body.tutor_gender,
+      days: body.days,
+      school: body.school,
+      firstname: body.first_name,
+      lastname: body.last_name,
+      eca: body.eca,
+      hobbies: body.hobbies,
+      experience: body.experience,
+      other: body.other,
+      bio: body.bio,
+      major: body.major,
+      university: body.university,
+    }
+  );
+  res.json({
+    success: "Success",
+  });
+};
+
 const getPostInfo = async (req, res) => {
   const data = await StudentDetails.find({}, { posts: 1, _id: 0 });
   const postings = [];
@@ -84,9 +117,7 @@ const applied = async (req, res) => {
   const token = authorization.split(" ")[1];
   const phone = await verify(token);
   const user = await TutorDetails.find({ phone: phone });
-  console.log(user);
   const id = body.id;
-  console.log(id);
   const data = await StudentDetails.findOneAndUpdate(
     { "posts._id": ObjectId(id) },
     {
@@ -95,7 +126,6 @@ const applied = async (req, res) => {
       },
     }
   );
-  console.log(data);
 };
 
 const getUserPosts = async (req, res) => {
@@ -103,12 +133,10 @@ const getUserPosts = async (req, res) => {
   const token = authorization.split(" ")[1];
   const phone = await verify(token);
   const user = await StudentDetails.find({ phone: phone });
-  if (Object.keys(user).length > 0) {
-    const data = user[0].posts;
-    res.json({
-      data,
-    });
-  }
+  const data = user[0].posts;
+  res.json({
+    data,
+  });
 };
 
 const deleteUserPost = async (req, res) => {
@@ -134,23 +162,24 @@ const getSinglePost = async (req, res) => {
   });
 };
 
-const getPostApplicants = async(req, res) => {
-  console.log(req.params.id)
+const getPostApplicants = async (req, res) => {
   const data = await StudentDetails.aggregate([
     { $unwind: "$posts" },
     { $match: { "posts._id": ObjectId(req.params.id) } },
   ]);
   const post = data[0].posts.applied;
-  let applicants = []
-  await Promise.all(post.map(async(item) => {
-    await TutorDetails.findOne({"_id": ObjectId(item)}).then(tutor => {
-      applicants.push(tutor)
+  let applicants = [];
+  await Promise.all(
+    post.map(async (item) => {
+      await TutorDetails.findOne({ _id: ObjectId(item) }).then((tutor) => {
+        applicants.push(tutor);
+      });
     })
-  }))
+  );
   res.json({
-    applicants
-  })
-}
+    applicants,
+  });
+};
 
 const updatePost = async (req, res) => {
   const body = req.body;
@@ -177,15 +206,30 @@ const updatePost = async (req, res) => {
   );
 };
 
-const getPhoneNumber = async(req, res) => {
+const getPhoneNumber = async (req, res) => {
   const authorization = req.headers.authorization;
   const token = authorization.split(" ")[1];
   const phone = await verify(token);
   res.json({
-    phone: phone
-  })
-}
- 
+    phone: phone,
+  });
+};
+
+const getProfileInitial = async (req, res) => {
+  const authorization = req.headers.authorization;
+  const token = authorization.split(" ")[1];
+  const phone = await verify(token);
+  const tutor = await TutorDetails.find({ phone: phone });
+  const data = {
+    phone: phone,
+    firstname: tutor[0].firstname,
+    lastname: tutor[0].lastname,
+  };
+  res.json({
+    data,
+  });
+};
+
 async function verify(token) {
   let phone = "";
   await admin
@@ -212,5 +256,7 @@ module.exports = {
   getSinglePost,
   updatePost,
   getPostApplicants,
-  getPhoneNumber
+  getPhoneNumber,
+  createTutorProfile,
+  getProfileInitial,
 };

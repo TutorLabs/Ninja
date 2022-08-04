@@ -12,7 +12,9 @@ const {
   getSinglePost,
   updatePost,
   getPostApplicants,
-  getPhoneNumber
+  getPhoneNumber,
+  createTutorProfile,
+  getProfileInitial
 } = require("../controllers/userinfo");
 
 router.post("/register", createUser);
@@ -23,5 +25,7 @@ router.get("/myposts", getUserPosts);
 router.route("/post/:id").delete(deleteUserPost).get(getSinglePost).put(updatePost)
 router.get("/applicants/:id", getPostApplicants)
 router.get("/phone", getPhoneNumber)
+router.route("/profile").post(createTutorProfile)
+router.get("/profileinfo", getProfileInitial)
 
 module.exports = router;
