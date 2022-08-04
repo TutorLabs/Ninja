@@ -14,7 +14,10 @@ const {
   getPostApplicants,
   getPhoneNumber,
   createTutorProfile,
-  getProfileInitial
+  getProfileInitial,
+  addLikedTutor,
+  addRejectedTutor,
+  getLikedTutors
 } = require("../controllers/userinfo");
 
 router.post("/register", createUser);
@@ -27,5 +30,7 @@ router.get("/applicants/:id", getPostApplicants)
 router.get("/phone", getPhoneNumber)
 router.route("/profile").post(createTutorProfile)
 router.get("/profileinfo", getProfileInitial)
+router.route("/likedtutor/:id").post(addLikedTutor)
+router.post("/rejectedtutor/:id", addRejectedTutor)
 
 module.exports = router;

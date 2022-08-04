@@ -171,17 +171,41 @@ const getPostApplicants = async (req, res) => {
     { $unwind: "$posts" },
     { $match: { "posts._id": ObjectId(req.params.id) } },
   ]);
-  const post = data[0].posts.applied;
-  let applicants = [];
+  const applied = data[0].posts.applied;
+  const liked = data[0].posts.liked
+  const rejected = data[0].posts.rejected;
+  let appliedApplicants = [];
+  let likedApplicants = [];
+  let rejectedApplicants = [];
   await Promise.all(
-    post.map(async (item) => {
+    applied.map(async (item) => {
       await TutorDetails.findOne({ _id: ObjectId(item) }).then((tutor) => {
-        applicants.push(tutor);
+        appliedApplicants.push(tutor);
       });
     })
   );
+  await Promise.all(
+    liked.map(async (item) => {
+      await TutorDetails.findOne({ _id: ObjectId(item) }).then((tutor) => {
+        likedApplicants.push(tutor);
+      });
+    })
+  );
+  await Promise.all(
+    rejected.map(async (item) => {
+      await TutorDetails.findOne({ _id: ObjectId(item) }).then((tutor) => {
+        rejectedApplicants.push(tutor);
+      });
+    })
+  );
+  const allApplicants = {
+    applied: appliedApplicants,
+    liked: likedApplicants,
+    rejected: rejectedApplicants
+  }
+  console.log(allApplicants)
   res.json({
-    applicants,
+    allApplicants
   });
 };
 
@@ -237,6 +261,32 @@ const getProfileInitial = async (req, res) => {
   });
 };
 
+const addLikedTutor = async (req, res) => {
+  const post_id = req.params.id;
+  const body = req.body;
+  await StudentDetails.findOneAndUpdate(
+    { "posts._id": ObjectId(post_id) },
+    {
+      $push: {
+        "posts.$.liked": ObjectId(body.tutor_id),
+      },
+    }
+  );
+};
+
+const addRejectedTutor = async (req, res) => {
+  const post_id = req.params.id;
+  const body = req.body;
+  await StudentDetails.findOneAndUpdate(
+    { "posts._id": ObjectId(post_id) },
+    {
+      $push: {
+        "posts.$.rejected": ObjectId(body.tutor_id),
+      },
+    }
+  );
+};
+
 async function verify(token) {
   let phone = "";
   await admin
@@ -266,4 +316,6 @@ module.exports = {
   getPhoneNumber,
   createTutorProfile,
   getProfileInitial,
+  addLikedTutor,
+  addRejectedTutor
 };
