@@ -152,11 +152,15 @@ const deleteUserPost = async (req, res) => {
 };
 
 const getSinglePost = async (req, res) => {
+  const authorization = req.headers.authorization;
+  const token = authorization.split(" ")[1];
+  const phone = await verify(token);
   const data = await StudentDetails.aggregate([
     { $unwind: "$posts" },
     { $match: { "posts._id": ObjectId(req.params.id) } },
   ]);
-  const post = data[0].posts;
+  let post = data[0].posts;
+  post = { ...post, phone_number: phone };
   res.json({
     post,
   });
@@ -204,6 +208,9 @@ const updatePost = async (req, res) => {
       },
     }
   );
+  res.json({
+    success: "Success",
+  });
 };
 
 const getPhoneNumber = async (req, res) => {
