@@ -60,7 +60,7 @@ const createStudentPost = async (req, res) => {
 
 const createTutorProfile = async (req, res) => {
   const body = req.body;
-  const number = body.phone_number;
+  const number = body.phone;
   await TutorDetails.updateOne(
     { phone: number },
     {
@@ -75,8 +75,8 @@ const createTutorProfile = async (req, res) => {
       tutor_gender: body.tutor_gender,
       days: body.days,
       school: body.school,
-      firstname: body.first_name,
-      lastname: body.last_name,
+      firstname: body.firstname,
+      lastname: body.lastname,
       eca: body.eca,
       hobbies: body.hobbies,
       experience: body.experience,
@@ -172,7 +172,7 @@ const getPostApplicants = async (req, res) => {
     { $match: { "posts._id": ObjectId(req.params.id) } },
   ]);
   const applied = data[0].posts.applied;
-  const liked = data[0].posts.liked
+  const liked = data[0].posts.liked;
   const rejected = data[0].posts.rejected;
   let appliedApplicants = [];
   let likedApplicants = [];
@@ -201,11 +201,11 @@ const getPostApplicants = async (req, res) => {
   const allApplicants = {
     applied: appliedApplicants,
     liked: likedApplicants,
-    rejected: rejectedApplicants
-  }
-  console.log(allApplicants)
+    rejected: rejectedApplicants,
+  };
+  console.log(allApplicants);
   res.json({
-    allApplicants
+    allApplicants,
   });
 };
 
@@ -251,13 +251,9 @@ const getProfileInitial = async (req, res) => {
   const token = authorization.split(" ")[1];
   const phone = await verify(token);
   const tutor = await TutorDetails.find({ phone: phone });
-  const data = {
-    phone: phone,
-    firstname: tutor[0].firstname,
-    lastname: tutor[0].lastname,
-  };
+  const tutorInfo = tutor[0]
   res.json({
-    data,
+    tutorInfo,
   });
 };
 
@@ -317,5 +313,5 @@ module.exports = {
   createTutorProfile,
   getProfileInitial,
   addLikedTutor,
-  addRejectedTutor
+  addRejectedTutor,
 };
