@@ -203,7 +203,6 @@ const getPostApplicants = async (req, res) => {
     liked: likedApplicants,
     rejected: rejectedApplicants,
   };
-  console.log(allApplicants);
   res.json({
     allApplicants,
   });
@@ -283,6 +282,13 @@ const addRejectedTutor = async (req, res) => {
   );
 };
 
+const getTutorInfo = async(req, res) => {
+  const data = await TutorDetails.findOne({_id: ObjectId(req.params.id)})
+  res.json({
+    data
+  })
+}
+
 async function verify(token) {
   let phone = "";
   await admin
@@ -314,4 +320,5 @@ module.exports = {
   getProfileInitial,
   addLikedTutor,
   addRejectedTutor,
+  getTutorInfo
 };
