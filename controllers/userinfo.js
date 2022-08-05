@@ -226,7 +226,7 @@ const updatePost = async (req, res) => {
         "posts.$.min_salary": body.min_salary,
         "posts.$.tutor_gender": body.preferred_gender,
         "posts.$.student_gender": body.student_gender,
-        "posts.$.availability_days": body.days,
+        "posts.$.availability_days": body.availability_days,
         "posts.$.school": body.school,
       },
     }
