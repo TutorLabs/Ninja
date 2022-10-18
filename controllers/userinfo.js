@@ -267,6 +267,14 @@ const addLikedTutor = async (req, res) => {
       },
     }
   );
+  await StudentDetails.findOneAndUpdate(
+    { "posts._id": ObjectId(post_id) },
+    {
+      $pull: {
+        "posts.$.applied": ObjectId(body.tutor_id),
+      },
+    }
+  );
 };
 
 const addRejectedTutor = async (req, res) => {
@@ -277,6 +285,14 @@ const addRejectedTutor = async (req, res) => {
     {
       $push: {
         "posts.$.rejected": ObjectId(body.tutor_id),
+      },
+    }
+  );
+  await StudentDetails.findOneAndUpdate(
+    { "posts._id": ObjectId(post_id) },
+    {
+      $pull: {
+        "posts.$.applied": ObjectId(body.tutor_id),
       },
     }
   );
