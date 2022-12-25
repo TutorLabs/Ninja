@@ -31,6 +31,9 @@ const StudentSchema = new mongoose.Schema({
     maxlength: 20,
     unique: true,
   },
+  photoUrl: {
+    type: String,
+  },
   // major: {
   //     type: String,
   //     minlength: 3

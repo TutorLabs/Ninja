@@ -20,6 +20,7 @@
     "firebase": "^9.8.2",
     "firebase-admin": "^10.3.0",
     "mongoose": "^6.3.5",
+    "multer": "^1.4.5-lts.1",
     "validator": "^13.7.0"
   }
 }

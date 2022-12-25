@@ -34,6 +34,7 @@ const connectDB = require('./db/connect')
 var testApiRouter = require("./routes/testApi");
 const verify = require("./routes/auth")
 const details = require("./routes/userinfo")
+const photo = require("./routes/photo")
 
 // Routes
 app.use("/testapi", testApiRouter);
@@ -42,6 +43,7 @@ app.get('/', (req, res) => {
 })
 app.use('/api', verify)
 app.use('/api', details)
+app.use('/api', photo)
 
 const port = process.env.PORT || 9000
 

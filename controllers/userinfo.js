@@ -12,12 +12,14 @@ const createUser = async (req, res) => {
       firstname: first_name,
       lastname: last_name,
       phone: number,
+      photoUrl: "https://firebasestorage.googleapis.com/v0/b/tutorlab-139a3.appspot.com/o/user_default.png?alt=media&token=aa033c6f-f5ea-4d25-bc58-fb69300e7575"
     });
   } else if (role == "tutor") {
     await TutorDetails.create({
       firstname: first_name,
       lastname: last_name,
       phone: number,
+      photoUrl: "https://firebasestorage.googleapis.com/v0/b/tutorlab-139a3.appspot.com/o/user_default.png?alt=media&token=aa033c6f-f5ea-4d25-bc58-fb69300e7575"
     });
   }
   res.json({
@@ -155,12 +157,14 @@ const getSinglePost = async (req, res) => {
   const authorization = req.headers.authorization;
   const token = authorization.split(" ")[1];
   const phone = await verify(token);
+  const userInfo = await StudentDetails.find({phone: phone})
+  const photoUrl = userInfo[0].photoUrl
   const data = await StudentDetails.aggregate([
     { $unwind: "$posts" },
     { $match: { "posts._id": ObjectId(req.params.id) } },
   ]);
   let post = data[0].posts;
-  post = { ...post, phone_number: phone };
+  post = { ...post, phone_number: phone, photoUrl: photoUrl  };
   res.json({
     post,
   });
@@ -240,8 +244,11 @@ const getPhoneNumber = async (req, res) => {
   const authorization = req.headers.authorization;
   const token = authorization.split(" ")[1];
   const phone = await verify(token);
+  const userInfo = await StudentDetails.find({phone: phone})
+  const photoUrl = userInfo[0].photoUrl
   res.json({
     phone: phone,
+    photoUrl: photoUrl
   });
 };
 
