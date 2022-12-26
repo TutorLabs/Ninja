@@ -12,14 +12,14 @@ const createUser = async (req, res) => {
       firstname: first_name,
       lastname: last_name,
       phone: number,
-      photoUrl: "https://firebasestorage.googleapis.com/v0/b/tutorlab-139a3.appspot.com/o/user_default.png?alt=media&token=aa033c6f-f5ea-4d25-bc58-fb69300e7575"
+      photoUrl: "https://firebasestorage.googleapis.com/v0/b/tutorlab-cbc12.appspot.com/o/user_default.png?alt=media&token=e4af10f1-b432-4d3f-a78d-9b09d950b120"
     });
   } else if (role == "tutor") {
     await TutorDetails.create({
       firstname: first_name,
       lastname: last_name,
       phone: number,
-      photoUrl: "https://firebasestorage.googleapis.com/v0/b/tutorlab-139a3.appspot.com/o/user_default.png?alt=media&token=aa033c6f-f5ea-4d25-bc58-fb69300e7575"
+      photoUrl: "https://firebasestorage.googleapis.com/v0/b/tutorlab-cbc12.appspot.com/o/user_default.png?alt=media&token=e4af10f1-b432-4d3f-a78d-9b09d950b120"
     });
   }
   res.json({
