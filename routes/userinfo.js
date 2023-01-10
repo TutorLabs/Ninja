@@ -18,7 +18,8 @@ const {
   addLikedTutor,
   addRejectedTutor,
   getLikedTutors,
-  getTutorInfo
+  getTutorInfo,
+  sendConnectedSMS
 } = require("../controllers/userinfo");
 
 router.post("/register", createUser);
@@ -34,5 +35,6 @@ router.get("/profileinfo", getProfileInitial)
 router.route("/likedtutor/:id").post(addLikedTutor)
 router.post("/rejectedtutor/:id", addRejectedTutor)
 router.get("/tutorinfo/:id", getTutorInfo)
+router.post("/connected/:id", sendConnectedSMS)
 
 module.exports = router;

@@ -135,10 +135,12 @@ const getUserPosts = async (req, res) => {
   const token = authorization.split(" ")[1];
   const phone = await verify(token);
   const user = await StudentDetails.find({ phone: phone });
-  const data = user[0].posts;
-  res.json({
-    data,
-  });
+  if (Array.isArray(user) && user.length) {
+    const data = user[0].posts;
+    res.json({
+      data,
+    });
+  }
 };
 
 const deleteUserPost = async (req, res) => {
@@ -312,6 +314,37 @@ const getTutorInfo = async(req, res) => {
   })
 }
 
+const sendConnectedSMS = async(req, res) => {
+  const post_id = req.params.id;
+  const body = req.body;
+  const tutorInfo = await TutorDetails.findById(body.tutor_id, 'phone firstname lastname')
+  const studentPosterInfo = await StudentDetails.find(
+    { "posts._id": ObjectId(post_id) }
+  )
+  const studentPhoneNumber = studentPosterInfo[0].phone
+  const postings = studentPosterInfo[0].posts
+  let studentFirstName = ''
+  let studentLastName = ''
+  for (const i in postings) {
+    if (postings[i]._id.valueOf() == post_id) {
+      studentFirstName = postings[i].firstname
+      studentLastName = postings[i].lastname
+      break
+    }
+  }
+  const tutorFullName = `${tutorInfo.firstname} ${tutorInfo.lastname}`
+  const studentFullName = `${studentFirstName} ${studentLastName}`
+  const tutorPhoneNumber = tutorInfo.phone
+
+  res.json({
+    tutorFullName: tutorFullName,
+    studentFullName: studentFullName,
+    tutorPhoneNumber: tutorPhoneNumber,
+    studentPhoneNumber: studentPhoneNumber
+  })
+
+}
+
 async function verify(token) {
   let phone = "";
   await admin
@@ -343,5 +376,6 @@ module.exports = {
   getProfileInitial,
   addLikedTutor,
   addRejectedTutor,
-  getTutorInfo
+  getTutorInfo,
+  sendConnectedSMS
 };
