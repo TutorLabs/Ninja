@@ -94,13 +94,21 @@ const createTutorProfile = async (req, res) => {
 };
 
 const getPostInfo = async (req, res) => {
-  const data = await StudentDetails.find({}, { posts: 1, _id: 0 });
+  const allInfo = await StudentDetails.find({});
   const postings = [];
-  data.map((item) => {
-    item.posts.map((post) => {
-      postings.push(post);
-    });
-  });
+  allInfo.map((item) => {
+    let photo = ''
+    if (item.photoUrl) {
+      photo = item.photoUrl
+    }
+    if (Array.isArray(item.posts) && item.posts.length) {
+      item.posts.map((post) => {
+        let updatedPost = JSON.parse(JSON.stringify(post))
+        updatedPost = {...updatedPost, photoUrl: photo}
+        postings.push(updatedPost)
+      })
+    }
+  })
   res.json({
     postings,
   });
