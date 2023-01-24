@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const Schema = mongoose.Schema;
 
 const TutorSchema = new mongoose.Schema({
   firstname: {
@@ -92,6 +93,12 @@ const TutorSchema = new mongoose.Schema({
   other: {
     type: String,
   },
+  appliedto: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "StudentDetails",
+    }
+  ],
 });
 
 module.exports = mongoose.model("TutorDetails", TutorSchema);

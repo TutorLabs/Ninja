@@ -96,6 +96,12 @@ const createTutorProfile = async (req, res) => {
 const getPostInfo = async (req, res) => {
   const allInfo = await StudentDetails.find({});
   const postings = [];
+  const appliedPostings = []
+  const authorization = req.headers.authorization;
+  const token = authorization.split(" ")[1];
+  const phone = await verify(token);
+  let tutorAppliedTo = await TutorDetails.find({phone: phone}, 'appliedto')
+  tutorAppliedTo = tutorAppliedTo[0].appliedto
   allInfo.map((item) => {
     let photo = ''
     if (item.photoUrl) {
@@ -103,14 +109,21 @@ const getPostInfo = async (req, res) => {
     }
     if (Array.isArray(item.posts) && item.posts.length) {
       item.posts.map((post) => {
-        let updatedPost = JSON.parse(JSON.stringify(post))
-        updatedPost = {...updatedPost, photoUrl: photo}
-        postings.push(updatedPost)
+        if (!tutorAppliedTo.includes(post._id)) {
+          let updatedPost = JSON.parse(JSON.stringify(post))
+          updatedPost = {...updatedPost, photoUrl: photo}
+          postings.push(updatedPost)
+        } else {
+          let updatedPost = JSON.parse(JSON.stringify(post))
+          updatedPost = {...updatedPost, photoUrl: photo}
+          appliedPostings.push(updatedPost)
+        }
       })
     }
   })
   res.json({
     postings,
+    appliedPostings
   });
 };
 
@@ -136,6 +149,14 @@ const applied = async (req, res) => {
       },
     }
   );
+  const tutorApplied = await TutorDetails.updateOne(
+    {phone: phone},
+    {
+      $push: {
+        appliedto: ObjectId(id)
+      }
+    }
+  )
 };
 
 const getUserPosts = async (req, res) => {
