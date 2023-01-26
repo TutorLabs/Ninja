@@ -3,17 +3,21 @@ const TutorDetails = require("../models/tutor");
 
 const uploadPhoto = async(req, res) => {
     const data = req.body
+    let old_photo = ''
     if (data.role == 'tutor') {
-        await TutorDetails.findOneAndUpdate(
+        old_photo = await TutorDetails.findOneAndUpdate(
             {phone: data.phone},
             {photoUrl: data.link}
         )
     } else {
-        await StudentDetails.findOneAndUpdate(
+        old_photo = await StudentDetails.findOneAndUpdate(
             {phone: data.phone},
             {photoUrl: data.link}
         )
     }
+    res.json({
+        link: old_photo.photoUrl
+    })
 }
 
 module.exports = {uploadPhoto}
