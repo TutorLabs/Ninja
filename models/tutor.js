@@ -7,12 +7,12 @@ const TutorSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please provide your first name"],
     maxlength: 50,
-    minlength: 3,
+    minlength: 1,
   },
   lastname: {
     type: String,
     maxlength: 50,
-    minlength: 3,
+    minlength: 1,
   },
   email: {
     type: String,
