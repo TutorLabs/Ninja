@@ -37,7 +37,7 @@ const details = require("./routes/userinfo")
 const photo = require("./routes/photo")
 
 // Routes
-app.use("/testapi", testApiRouter);
+app.use("/api/testapi", testApiRouter);
 app.get('/', (req, res) => {
     res.send('Hello World')
 })
