@@ -52,10 +52,10 @@ const TutorSchema = new mongoose.Schema({
     type: String,
   },
   online: {
-    type: String
+    type: String,
   },
   bio: {
-    type: String
+    type: String,
   },
   subjects: [
     {
@@ -63,12 +63,10 @@ const TutorSchema = new mongoose.Schema({
       //required: [true, 'Please list the subjects you are willing to teach']
     },
   ],
-  locations: [
-    {
-      type: String,
-      //required: [true, 'Please list the locations where you are willing to teach']
-    },
-  ],
+  locations: {
+    type: String,
+    //required: [true, 'Please list the locations where you are willing to teach']
+  },
   days: {
     type: String,
   },
@@ -97,7 +95,7 @@ const TutorSchema = new mongoose.Schema({
     {
       type: Schema.Types.ObjectId,
       ref: "StudentDetails",
-    }
+    },
   ],
 });
 
