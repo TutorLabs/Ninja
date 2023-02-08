@@ -157,6 +157,9 @@ const applied = async (req, res) => {
       }
     }
   )
+  res.json({
+    success: "Success"
+  })
 };
 
 const getUserPosts = async (req, res) => {
