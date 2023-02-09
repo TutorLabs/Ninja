@@ -79,6 +79,7 @@ const createTutorProfile = async (req, res) => {
       school: body.school,
       firstname: body.firstname,
       lastname: body.lastname,
+      result: body.result,
       eca: body.eca,
       hobbies: body.hobbies,
       experience: body.experience,

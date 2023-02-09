@@ -57,6 +57,9 @@ const TutorSchema = new mongoose.Schema({
   bio: {
     type: String,
   },
+  result: {
+    type: String,
+  },
   subjects: [
     {
       type: String,
