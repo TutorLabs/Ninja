@@ -122,6 +122,7 @@ const getPostInfo = async (req, res) => {
       })
     }
   })
+  postings.reverse()
   res.json({
     postings,
     appliedPostings
