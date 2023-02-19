@@ -100,6 +100,12 @@ const TutorSchema = new mongoose.Schema({
       ref: "StudentDetails",
     },
   ],
+  message_received: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "StudentDetails",
+    }
+  ],
 });
 
 module.exports = mongoose.model("TutorDetails", TutorSchema);

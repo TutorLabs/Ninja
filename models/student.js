@@ -34,10 +34,12 @@ const StudentSchema = new mongoose.Schema({
   photoUrl: {
     type: String,
   },
-  // major: {
-  //     type: String,
-  //     minlength: 3
-  // },
+  message_sent: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "TutorDetails",
+    }
+  ],
   posts: [
     {
       school: {

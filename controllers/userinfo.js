@@ -355,6 +355,24 @@ const sendConnectedSMS = async(req, res) => {
   const studentPosterInfo = await StudentDetails.find(
     { "posts._id": ObjectId(post_id) }
   )
+  await TutorDetails.updateOne(
+    {_id: ObjectId(body.tutor_id)}, 
+    {
+      $push: {
+        message_received: ObjectId(studentPosterInfo[0]._id)
+      }
+    }
+  )
+  await StudentDetails.updateOne(
+    {_id: ObjectId(studentPosterInfo[0]._id)},
+    {
+      $push: {
+        message_sent: ObjectId(body.tutor_id)
+      }
+    }
+  )
+  console.log(studentPosterInfo)
+  console.log(body.tutor_id)
   const studentPhoneNumber = studentPosterInfo[0].phone
   const postings = studentPosterInfo[0].posts
   let studentFirstName = ''
