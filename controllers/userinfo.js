@@ -51,6 +51,7 @@ const createStudentPost = async (req, res) => {
           date: new Date().toISOString().slice(0, 10),
           firstname: body.firstname,
           lastname: body.lastname,
+          other_info: body.other_info,
         },
       },
     }
@@ -268,6 +269,7 @@ const updatePost = async (req, res) => {
         "posts.$.student_gender": body.student_gender,
         "posts.$.availability_days": body.availability_days,
         "posts.$.school": body.school,
+        "posts.$.other_info": body.other_info,
       },
     }
   );
@@ -371,8 +373,6 @@ const sendConnectedSMS = async(req, res) => {
       }
     }
   )
-  console.log(studentPosterInfo)
-  console.log(body.tutor_id)
   const studentPhoneNumber = studentPosterInfo[0].phone
   const postings = studentPosterInfo[0].posts
   let studentFirstName = ''

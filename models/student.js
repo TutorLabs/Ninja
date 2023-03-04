@@ -108,6 +108,9 @@ const StudentSchema = new mongoose.Schema({
       availability_days: {
         type: String,
       },
+      other_info: {
+        type: String
+      }
     },
   ],
 });
