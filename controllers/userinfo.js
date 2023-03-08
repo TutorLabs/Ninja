@@ -283,11 +283,13 @@ const getPhoneNumber = async (req, res) => {
   const token = authorization.split(" ")[1];
   const phone = await verify(token);
   const userInfo = await StudentDetails.find({phone: phone})
-  const photoUrl = userInfo[0].photoUrl
-  res.json({
-    phone: phone,
-    photoUrl: photoUrl
-  });
+  if (Array.isArray(userInfo) && userInfo.length) {
+    photoUrl = userInfo[0].photoUrl
+    res.json({
+      phone: phone,
+      photoUrl: photoUrl
+    });
+  }
 };
 
 const getProfileInitial = async (req, res) => {
